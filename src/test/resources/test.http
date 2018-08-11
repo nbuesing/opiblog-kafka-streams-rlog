@@ -1,0 +1,6 @@
+POST {{host}}/api/v1/commit?forceFailure=true&delay=1
+Content-Type: application/json
+
+{"foo":"bar"}
+
+###

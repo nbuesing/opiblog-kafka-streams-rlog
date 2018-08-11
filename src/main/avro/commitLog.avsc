@@ -1,0 +1,29 @@
+{
+  "namespace": "com.objectpartners.buesing.avro",
+  "name": "CommitLog",
+  "type": "record",
+  "fields": [
+    {
+      "name": "url",
+      "type": "string"
+    },
+    {
+      "name": "action",
+      "type": "com.objectpartners.buesing.avro.Action"
+    },
+    {
+      "name": "headers",
+      "type": { "type" : "map", "values": "string" }
+    },
+    {
+      "name": "body",
+      "type": [ "null", "string" ],
+      "default" : null
+    },
+    {
+      "name": "status",
+      "type": [ "null", "int" ],
+      "default" : null
+    }
+  ]
+}
