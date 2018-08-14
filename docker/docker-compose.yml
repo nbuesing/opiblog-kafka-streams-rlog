@@ -37,6 +37,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       KAFKA_JMX_PORT: 9991
       KAFKA_JMX_HOSTNAME: broker101
+      KAFKA_CREATE_TOPICS: "commit.log:8:1,commit.log.replay:8:1,commit.log.replay2:8.1"
 
   schemaregistry:
     image: confluentinc/cp-schema-registry:5.0.0
