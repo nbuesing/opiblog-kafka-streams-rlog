@@ -17,7 +17,7 @@ spring:
       write_dates_as_timestamps: false
     default-property-inclusion: non_absent
   kafka:
-    bootstrap-servers: broker101:9092
+    bootstrap-servers: localhost:19092
     consumer:
       group-id: blog-commit-log
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -36,7 +36,7 @@ spring:
 kafka:
   streams:
     schema-registry-url: http://localhost:8081
-    bootstrap-servers: broker101:9092
+    bootstrap-servers: localhost:19092
     application-id: testStreams2
 
 info:
