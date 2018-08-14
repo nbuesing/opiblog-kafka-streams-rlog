@@ -63,8 +63,8 @@ public class KafkaConfig {
     /**
      * Create a KStream for the given topic.
      *
-     * You must know how the data is serialized on the topic.  When using AVRO you have various options for domain
-     * object to access the data.  Various Serde's know how to convert read the binary AVRO data into a domain structure
+     * You must know how the data is serialized on the topic.  When using Avro you have various options for domain
+     * object to access the data.  Various Serde's know how to convert read the binary Avro data into a domain structure
      * that can access the data.  For Streams that need little or not inspection of the message, utilizing
      * the GenericAvroSerde makes sense.
      *
@@ -73,7 +73,7 @@ public class KafkaConfig {
     @Bean
     public KStream<String, GenericRecord> kStream(StreamsBuilder streamBuilder) {
         return streamBuilder
-                // stream a topic deserializing the key as a string and deserializing the value as AVRO into a generic record object.
+                // stream a topic deserializing the key as a string and deserializing the value as Avro into a generic record object.
                 .stream("commit.log", Consumed.with(Serdes.String(), valueSerde()))
                 .peek((key, value) -> log.debug("kStream : key={}, value={}", key, value));
     }
@@ -151,7 +151,7 @@ public class KafkaConfig {
         return kStream(streamBuilder)
                 .peek((key, value) -> log.debug("kStreamReplay (pre filter) : key={}, value={}", key, value))
                 // we only want the requests, not the response, so we must filter based on content of the message (value)
-                // we are utilizing the AVRO GenericRecord to obtain the action value.  a SpecificRecord AVRO could
+                // we are utilizing the Avro GenericRecord to obtain the action value.  a SpecificRecord Avro could
                 // have been utilized if so desired.
                 .filter((key, value) -> "REQUEST".equals(value.get("action").toString())) // could use specific avro...
                 .peek((key, value) -> log.debug("kStreamReplay (post filter) : key={}, value={}", key, value))
@@ -160,7 +160,7 @@ public class KafkaConfig {
                             log.debug("kStreamReplay (join) value1={}, value2={}", value1, value2);
                             return value1;
                         },
-                        JoinWindows.of(1000L), // picking a window larger than the session window of the kTable
+                        JoinWindows.of(2000L), // picking a window larger than the session window of the kTable
                         Joined.with(Serdes.String(), valueSerde(), Serdes.Integer()))
                 .peek((key, value) -> log.debug("kStreamReplay (post join) : key={}, value={}", key, value))
                 // write the value out to another topic.  Since we are writing out the same key/value as the original
@@ -177,7 +177,7 @@ public class KafkaConfig {
         return kStreamResponseMissing(streamBuilder)
                 .peek((key, value) -> log.debug("kStreamReplay_v2 (pre filter) : key={}, value={}", key, value))
                 // we only want the requests, not the response, so we must filter based on content of the message (value)
-                // we are utilizing the AVRO GenericRecord to obtain the action value.  a SpecificRecord AVRO could
+                // we are utilizing the Avro GenericRecord to obtain the action value.  a SpecificRecord Avro could
                 // have been utilized if so desired.
                 .filter((key, value) -> value == 1)
                 .peek((key, value) -> log.debug("kStreamReplay_v2 (post filter) : key={}, value={}", key, value))
@@ -186,7 +186,7 @@ public class KafkaConfig {
                             log.debug("kStreamReplay_v2 (join) value1={}, value2={}", value1, value2);
                             return value2;
                         },
-                        JoinWindows.of(1000L),
+                        JoinWindows.of(2000L),
                         Joined.with(Serdes.String(), Serdes.Integer(), valueSerde()))
                 .peek((key, value) -> log.debug("kStreamReplay_v2 (post join) : key={}, value={}", key, value))
                 // write the value out to another topic.  Since we are writing out the same key/value as the original
